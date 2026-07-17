@@ -1,7 +1,10 @@
 """
 title: Edit Spreadsheet
-author: Custom
+author: giofsp
+author_url: https://github.com/sergiofspedro
 description: Create, read, and edit Excel (.xlsx) files with full cell-level editing, style preservation, and value replacement.
+version: 1.0.0
+requirements: openpyxl
 """
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
