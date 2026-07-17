@@ -1,64 +1,112 @@
-# Edit Spreadsheet — Open WebUI Tool
+# Edit Office Files — Open WebUI Tool
 
-Create, read, edit and export Excel (.xlsx) files directly from Open WebUI chats. Preserves original formatting and styles.
+Create, read, edit and export Office files (.docx, .xlsx, .xls, .pptx) directly from Open WebUI chats. Preserves original formatting and styles. Supports Word track changes (redlines) with custom author names.
 
 ## Features
 
-| Function | Description |
+| # | Function | Formats | Description |
+|---|---|---|---|
+| 1 | `read_file` | .xlsx .xls .docx .pptx | Read any Office file and return contents as structured JSON. Detects highlights, bold, italic in DOCX. |
+| 2 | `add_content` | .xlsx .xls .docx .pptx | Add new content while preserving ALL original formatting. CSV rows for Excel, text for Word, slides for PowerPoint. |
+| 3 | `replace_text` | .xlsx .xls .docx .pptx | Find and replace text across the entire file preserving fonts, styles, and cell formatting. |
+| 4 | `create_file` | .xlsx .docx .pptx | Create a brand new Office file from scratch with professional styling. |
+| 5 | `tracked_change` 🆕 | .docx | Apply Word track changes (redlines) with custom author name. Supports replace, insert, and delete modes. |
+| 6 | `manage_revisions` 🆕 | .docx | List all tracked changes, accept all, or reject all revisions in a Word document. |
+
+### Track Changes (v1.2.0)
+
+Built on [docx-revisions](https://github.com/balalofernandez/docx-revisions) library. Writes standard OOXML `w:ins` / `w:del` elements — 100% compatible with Microsoft Word.
+
+```python
+# Replace text with track changes
+tracked_change(file_id, change_type="replace", content="old_text|||new_text", author="Sergio Pedro")
+
+# Insert new text as tracked change
+tracked_change(file_id, change_type="insert", content="New paragraph text", author="Reviewer")
+
+# Mark paragraph for deletion
+tracked_change(file_id, change_type="delete", content="3", author="Editor")
+
+# List all revisions
+manage_revisions(file_id, action="list")
+
+# Accept all changes
+manage_revisions(file_id, action="accept_all")
+```
+
+**Track changes visibility by program:**
+
+| Program | Track changes visible? |
 |---|---|
-| `read_spreadsheet` | Read an Excel file and return all sheets, headers and rows as JSON |
-| `create_spreadsheet` | Create a new Excel file from scratch with styled headers and data |
-| `add_rows_to_sheet` | Add new rows to a sheet via CSV text, preserving original formatting |
-| `edit_cells` | Modify specific cells by (row, col) coordinates |
-| `replace_values` | Find-and-replace across a sheet or all sheets |
-| `delete_rows` | Remove specific rows by number |
-| `copy_sheet` | Duplicate a worksheet within the same workbook |
+| Microsoft Word | Yes — 100% native support |
+| LibreOffice | Yes — good OOXML revision support |
+| Google Docs | Partial — opens .docx but may drop metadata |
+
+### Format Support
+
+| Format | Read | Edit (preserve style) | Create | Notes |
+|---|---|---|---|---|
+| .xlsx | Yes | Yes | Yes | Full support via openpyxl |
+| .xls | Yes | Yes (saves as .xlsx) | — | Legacy format via xlrd |
+| .docx | Yes | Yes + Track Changes | Yes | Full support via python-docx + docx-revisions |
+| .pptx | Yes | Yes | Yes | Full support via python-pptx |
+| .doc | No | No | No | Suggest converting to .docx |
+| .ppt | No | No | No | Suggest converting to .pptx |
 
 ## Installation
 
-### Method 1: Install from Open WebUI Community
-Search for "Edit Spreadsheet" in the Open WebUI Community tools.
+### Method 1: Open WebUI Community
+Search for "Edit Office Files" in the Open WebUI Community tools.
 
 ### Method 2: Manual Install
 1. Download `tool.py` from this repo
-2. In Open WebUI: Workspace → Tools → New Tool
+2. In Open WebUI: Workspace > Tools > New Tool
 3. Paste the code and save
-4. Start the file server: `python file_server.py`
-5. Files will be available at `http://localhost:9000/`
+4. Install dependencies:
+```bash
+pip install openpyxl python-docx python-pptx xlrd docx-revisions
+```
+5. Start the file server: `python file_server.py` (serves files on port 9000)
 
 ### Method 3: Batch Install
-Use the Batch Install Plugins tool in Open WebUI and point to this repo.
+Use the Batch Install Plugins tool in Open WebUI pointing to this repo.
 
 ## Usage Examples
 
-**Read an Excel file:**
+**Read a file:**
 ```
-Upload your Excel file and ask:
-"Reve este ficheiro Excel e mostra-me os dados"
-```
-
-**Add data preserving styles:**
-```
-"Adiciona estas linhas ao Excel mantendo o mesmo formato:
-Nome,Idade,Cidade
-Ana,30,Lisboa
-Pedro,25,Porto"
+"Read this Excel file and show me the data"
+"Show me what's in this Word document"
+"What slides are in this presentation?"
 ```
 
-**Edit specific cells:**
+**Add content:**
 ```
-"Na sheet 'Vendas', muda a célula B5 para 1500"
-```
-
-**Find and replace:**
-```
-"Substitui todos os 'N/A' por 'Em falta' no Excel"
+"Add these rows to the Excel keeping the same style:
+Name,Age,City
+Ana,30,Lisbon"
+"Add this paragraph to the end of the Word document"
 ```
 
-## Requirements
-- Open WebUI Desktop or Server
-- Python 3.10+
-- Packages: `openpyxl`
+**Replace text:**
+```
+"Replace 'N/A' with 'Not Available' in this file"
+"Change all '2025' to '2026' in the spreadsheet"
+```
+
+**Track changes (Word only):**
+```
+"Replace 'old contract' with 'new contract' in this Word doc as a tracked change, author=Sergio"
+"Insert this clause as a redline, author=Legal Team"
+"List all tracked changes in this document"
+"Accept all revisions"
+```
+
+**Create new file:**
+```
+"Create an Excel with columns Name, Age, City and 5 rows of data"
+"Create a PowerPoint with 3 slides about Q3 results"
+```
 
 ## File Server
 The tool saves generated files to a local `exports/` directory and serves them via a simple HTTP server on port 9000. Run:
@@ -67,5 +115,16 @@ python file_server.py
 ```
 Files will be downloadable at `http://localhost:9000/filename.xlsx`
 
+## Dependencies
+- `openpyxl` — Excel .xlsx read/write
+- `python-docx` — Word .docx read/write
+- `python-pptx` — PowerPoint .pptx read/write
+- `xlrd` — Legacy Excel .xls read
+- `docx-revisions` — Word track changes (redlines)
+- `lxml` — XML processing (dependency of docx-revisions)
+
 ## License
 MIT
+
+## Author
+giofsp — [GitHub](https://github.com/sergiofspedro)
