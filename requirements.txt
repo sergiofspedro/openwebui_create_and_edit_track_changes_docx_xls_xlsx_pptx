@@ -1,0 +1,6 @@
+openpyxl>=3.1.0
+python-docx>=1.0.0
+python-pptx>=0.6.0
+xlrd>=1.2.0
+docx-revisions>=0.1.0
+lxml

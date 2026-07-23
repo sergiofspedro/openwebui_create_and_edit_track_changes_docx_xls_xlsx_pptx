@@ -1,4 +1,9 @@
 exports/
-*.xlsx
 __pycache__/
+*.pyc
 .env
+*.xlsx
+*.docx
+*.pptx
+!test_*.xlsx
+!test_*.docx
