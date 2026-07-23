@@ -15,6 +15,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Updated `.gitignore` to exclude generated Office files and compiled Python
 
+## [2.2.0] - 2026-07-23
+
+### Added
+- `merge_pdfs` — Merge multiple PDFs into one using PyMuPDF
+- `split_pdf` — Split PDF into parts by page count
+- `tool_stats` — Dashboard showing tools, functions, models, and exports count
+- `merge_sheets` — Merge XLSX files preserving styles
+- `batch_process` — Apply operations to multiple files at once
+- `auto_backup` — Timestamped database snapshot for safety
+- Office Templates KB — CV Europass, Cover Letter PT, Invoice, Proposal
+
 ## [1.2.0] - 2026-07-22
 
 ### Added

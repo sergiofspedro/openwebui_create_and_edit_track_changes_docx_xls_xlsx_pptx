@@ -12,6 +12,12 @@ Create, read, edit and export Office files (.docx, .xlsx, .xls, .pptx) directly 
 | 4 | `create_file` | .xlsx .docx .pptx | Create a brand new Office file from scratch with professional styling. |
 | 5 | `tracked_change` 🆕 | .docx | Apply Word track changes (redlines) with custom author name. Supports replace, insert, and delete modes. |
 | 6 | `manage_revisions` 🆕 | .docx | List all tracked changes, accept all, or reject all revisions in a Word document. |
+| 7 | `merge_pdfs` 🆕 | .pdf | Merge multiple PDFs into one using PyMuPDF. |
+| 8 | `split_pdf` 🆕 | .pdf | Split PDF into parts by page count. |
+| 9 | `merge_sheets` 🆕 | .xlsx | Merge Excel files preserving styles. |
+| 10 | `batch_process` 🆕 | All | Apply operation to multiple files at once. |
+| 11 | `auto_backup` 🆕 | - | Timestamped database backup for safety. |
+| 12 | `tool_stats` 🆕 | - | Show tool usage dashboard with counts. |
 
 ### Track Changes (v1.2.0)
 
